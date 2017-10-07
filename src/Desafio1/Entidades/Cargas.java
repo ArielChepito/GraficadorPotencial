@@ -19,20 +19,20 @@ public class Cargas {
     public Cargas() {
     }
 
-    public Cargas(int carga, int X, int Y, int distancia) {
+    public Cargas(double carga, int X, int Y, int distancia) {
         this.carga = carga;
         this.X = X;
         this.Y = Y;
         this.distancia = distancia;
     }
 
-    public Cargas(int carga, int X, int Y) {
+    public Cargas(double carga, int X, int Y) {
         this.carga = carga;
         this.X = X;
         this.Y = Y;
     }
 
-    public Cargas(int carga, int X, int Y, int distancia, double potencial) {
+    public Cargas(double carga, int X, int Y, int distancia, double potencial) {
         this.carga = carga;
         this.X = X;
         this.Y = Y;

@@ -13,6 +13,7 @@ import Desafio1.Utils.Physics;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -56,23 +57,31 @@ public class form extends javax.swing.JFrame {
        planoCartesiano.repaint();
     }
     void insertarCarga(){        
-       String[] strDatos = txtCarga.getText().split(",");       
+       String[] strDatos = txtCarga.getText().split(",");                 
+       double cargarel =  (cmbUnidad.getSelectedIndex() != 0) ?  Physics.internationalSystemUnits(cmbUnidad.getSelectedIndex(),Double.parseDouble(strDatos[0])) : Double.parseDouble(strDatos[0]);       
        Cargas carga = new Cargas(
-               Integer.parseInt(strDatos[0]),
+               cargarel,
                Integer.parseInt(strDatos[1]),
                Integer.parseInt(strDatos[2])       
-       );       
-       if(this.cmbUnidad.getSelectedIndex() == 0)
-       {
-           System.out.println("nano");
-       }
+       );              
        listaCarga.add(carga);
-       txtPunto.setText("");
+       txtCarga.setText("");
        PlanoCartesiano.listaCarga = listaCarga;
        planoCartesiano.repaint();
     }
-    void calcularPotencial(){        
-       Physics.calcularpotencial(listaPunto, listaCarga);
+    void calcularPotencial(){     
+        
+       double resultado= 0.00;
+       for(Punto punto : listaPunto) 
+       {
+           for(Cargas carga : listaCarga) 
+           {
+               
+               resultado =+ Physics.calcularpotencial(punto, carga);
+           }
+           this.cmbResultado.addItem(String.format("%3.3e",resultado));
+       }
+       
        planoCartesiano.repaint();
     }
     
@@ -85,12 +94,12 @@ public class form extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         txtCarga = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        txtResultado = new javax.swing.JTextField();
         btnCalcular = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         txtPunto = new javax.swing.JTextField();
         btnPunto = new javax.swing.JButton();
         cmbUnidad = new javax.swing.JComboBox<>();
+        cmbResultado = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -116,7 +125,7 @@ public class form extends javax.swing.JFrame {
                 btnIngresarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 570, -1, -1));
+        getContentPane().add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 570, -1, -1));
 
         jLabel1.setText("Ingresa las cargas (Carga, x,y) :");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 570, -1, 27));
@@ -130,36 +139,39 @@ public class form extends javax.swing.JFrame {
 
         jLabel2.setText("Resultado:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 630, -1, -1));
-        getContentPane().add(txtResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 620, 206, 30));
 
         btnCalcular.setText("Calcular");
+        btnCalcular.setFocusable(false);
         btnCalcular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCalcularActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCalcular, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 620, 94, -1));
+        getContentPane().add(btnCalcular, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 620, 94, -1));
 
-        jLabel3.setText("Ingrese Punto:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 530, -1, -1));
+        jLabel3.setText("Ingrese Punto (x, y ):");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 530, -1, -1));
 
         txtPunto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPuntoKeyPressed(evt);
             }
         });
-        getContentPane().add(txtPunto, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 520, 200, 30));
+        getContentPane().add(txtPunto, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 520, 220, 30));
 
         btnPunto.setText("Ingresar");
+        btnPunto.setFocusable(false);
         btnPunto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPuntoActionPerformed(evt);
             }
         });
-        getContentPane().add(btnPunto, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 520, -1, -1));
+        getContentPane().add(btnPunto, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 520, -1, -1));
 
-        cmbUnidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nano" }));
-        getContentPane().add(cmbUnidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 570, 70, 30));
+        cmbUnidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ninguna", "YOTTA", "ZETTA", "EXA", "PETA", "TERA", "GIGA", "MEGA", "KILO", "MILI", "MICRO", "NANO", "PICO", "FEMTO", "ATTO", "ZAPTO", "YOCTO" }));
+        getContentPane().add(cmbUnidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 570, 90, 30));
+
+        getContentPane().add(cmbResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 620, 220, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -169,7 +181,7 @@ public class form extends javax.swing.JFrame {
     }//GEN-LAST:event_btnIngresarActionPerformed
     
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-        // TODO add your handling code here:
+        calcularPotencial();
     }//GEN-LAST:event_btnCalcularActionPerformed
 
     private void txtCargaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCargaKeyPressed
@@ -226,12 +238,12 @@ public class form extends javax.swing.JFrame {
     private javax.swing.JButton btnCalcular;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton btnPunto;
+    private javax.swing.JComboBox<String> cmbResultado;
     private javax.swing.JComboBox<String> cmbUnidad;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField txtCarga;
     private javax.swing.JTextField txtPunto;
-    private javax.swing.JTextField txtResultado;
     // End of variables declaration//GEN-END:variables
 }
