@@ -1,7 +1,9 @@
 
 package Desafio1;
 
+import Desafio1.Utils.Assets;
 import Desafio1.Entidades.Cargas;
+import Desafio1.Entidades.Punto;
 import Desafio1.Entidades.Vector;
 import javax.swing.*;
 import java.awt.*;
@@ -10,27 +12,8 @@ import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grafica extends JPanel
-{  
-    JPanel panelContenedor = new JPanel(); 
-    JScrollPane scrollPanel;       
-    JPanel panelGrafico; 
-    
-    public Grafica(Container Contenedor)
-    {                           
 
-        panelGrafico = new PlanoCartesiano(new Vector(890,483)); //zona grafica        
-        scrollPanel = new JScrollPane(panelGrafico);///////        
-        panelContenedor.setLayout(new BorderLayout());
-        panelContenedor.add(scrollPanel, BorderLayout.CENTER);//panelGrafico       
-        //panelContenedor.setPreferredSize( new Dimension(dimension.X,dimension.Y));     
-        panelContenedor.setPreferredSize( new Dimension(890,483));     
-        Contenedor.setLayout(new BorderLayout());
-        Contenedor.add("North",panelContenedor);   
-        	
-        
-    }
-    public static class PlanoCartesiano extends JPanel  implements MouseListener, MouseMotionListener, MouseWheelListener
+    public class PlanoCartesiano extends JPanel  implements MouseListener, MouseMotionListener, MouseWheelListener
     {
         public int prueba;
         Vector dimension = new Vector();
@@ -39,24 +22,21 @@ public class Grafica extends JPanel
         Vector espaciado= new Vector(); 
         Vector origen = new Vector();
         Vector zoom= new Vector();   
-        boolean arrastrando; 
-        Font fuenteNumeros  = new Font("Arial",Font.PLAIN,10);
-        Color colorCuadricula = new Color(49,173,215);
-        Color colorNumero = new Color(255,255,255);
-        Color colorCarga = new Color(233,30,99);
-        Color colorPunto = new Color(76,175,80);
+        boolean arrastrando;    
+        public static boolean cuadricula= true;
+        public static boolean numeros = true;
+        public static boolean raya = true;
+       
         ImageIcon imageIcon;      
         int escala;  
-        int aumento; 
-        
-        static List<Cargas> lista;
-         
+        int aumento;         
+        public static List<Cargas> listaCarga;         
+        public static List<Punto> listaPunto;         
         
         public PlanoCartesiano(Vector dim) 
         {
-            dimension.set(dim);
-            //dimension.set(890,483);   
-            imageIcon = new ImageIcon(getClass().getResource("Assets/background.jpg"));  //imagen de fondo 
+            dimension.set(dim);   
+            imageIcon = new ImageIcon(getClass().getResource(Assets.rutaImagen));  
             espaciado.set(origen);
             escala =1;
             zoom.set(30);
@@ -107,11 +87,20 @@ public class Grafica extends JPanel
         {
              super.paintComponent(g);
              Graficar(g);  
-             if(lista != null)
+             
+             
+             if(listaCarga != null)
             {
-                if(lista.size() > 1)
+                if(listaCarga.size() > 0)
                 {
                     InsertarCargas(g);
+                }
+            }
+             if(listaPunto != null)
+            {
+                if(listaPunto.size() > 0)
+                {
+                    InsertarPuntos(g);
                 }
             }
              
@@ -120,12 +109,13 @@ public class Grafica extends JPanel
         void Graficar(Graphics ap)
         {
             ap.drawImage(imageIcon.getImage(), 0, 0, getWidth(), getHeight(), null);      
-            //convertimos el objeto ap en un objeto Graphics2D para usar los mŽtodos Java2D
+            
             Graphics2D g = (Graphics2D) ap;
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setFont(fuenteNumeros);            
+            g.setFont(Assets.fuenteNumeros);            
 
             //PINTAMOS EL EJE X Y EL EJE Y
+            g.setPaint(Assets.colorLinea); 
             g.draw(new Line2D.Double(origen.X, 10, origen.X, dimension.Y-10)); //EJE Y
             g.draw(new Line2D.Double(10, origen.Y, dimension.X-10, origen.Y));//EJE X
             
@@ -135,70 +125,81 @@ public class Grafica extends JPanel
             PuntosMinimos.Y=(int)Math.round(1.0*(origen.Y-dimension.Y)/zoom.Y);
             PuntosMaximos.Y=(int)Math.round(1.0*origen.Y/zoom.Y);
             
-            g.setPaint(colorCuadricula); 
-            g.setFont(fuenteNumeros);
-
-            //PINTAMOS TODOS LOS EJES PARA FORMAR LA CUADRICULA
-            
-                for(int i=PuntosMinimos.X;i<=PuntosMaximos.X;i++)
-                {   //EJES PARALELOS AL EJE Y
-                    g.setPaint(colorCuadricula); 
+            g.setPaint(Assets.colorCuadricula); 
+            g.setFont(Assets.fuenteNumeros);
+                    
+              
+            for(int i=PuntosMinimos.X;i<=PuntosMaximos.X;i++)
+            {   
+                if(raya)
+                {
+                    g.setPaint(Assets.colorCuadricula); 
                     g.draw(new Line2D.Double(origen.X+i*zoom.X, origen.Y-2, origen.X+i*zoom.X , origen.Y+2));
+                }
+                if(cuadricula)
+                {
                     if( (origen.X+i*zoom.X) != origen.X ){
-                        g.draw(new Line2D.Double(origen.X+i*zoom.X, 10, origen.X+i*zoom.X, dimension.Y-10));
+                    g.draw(new Line2D.Double(origen.X+i*zoom.X, 10, origen.X+i*zoom.X, dimension.Y-10));
                     }
+                }
+                if(numeros)
+                {   
                     if(i<0){
-                        g.setPaint(colorNumero);
+                        g.setPaint(Assets.colorNumero);
                         g.drawString(""+i*escala, origen.X+i*zoom.X-8, origen.Y+12);
                     }
                     if(i>0){
-                        g.setPaint(colorNumero);
+                        g.setPaint(Assets.colorNumero);
                         g.drawString(""+i*escala, origen.X+i*zoom.X-aumento, origen.Y+12);
                     }
-                    
                 }
-                for(int i=PuntosMinimos.Y+1;i<PuntosMaximos.Y;i++)
-                {   //EJES PARALELOS AL EJE X
-                    g.setPaint(colorCuadricula); 
+            }
+            for(int i=PuntosMinimos.Y+1;i<PuntosMaximos.Y;i++)
+            {  
+                if(raya)
+                {   
+                    g.setPaint(Assets.colorCuadricula); 
                     g.draw(new Line2D.Double(origen.X-2, origen.Y-i*zoom.Y, origen.X+2 , origen.Y-i*zoom.Y));
+                }
+                if(cuadricula)
+                {
                     if( (origen.Y-i*zoom.Y) != origen.Y ){
                         g.draw(new Line2D.Double(10, origen.Y-i*zoom.Y, dimension.X-10, origen.Y-i*zoom.Y));
                     }
+
+                }
+                if(numeros)
+                { 
                     if(i<0){
-                        g.setPaint(colorNumero);
+                        g.setPaint(Assets.colorNumero);
                         g.drawString(""+i*escala, origen.X-14,origen.Y-i*zoom.Y+8 );
                     }
                     if(i>0){
-                        g.setPaint(colorNumero);
+                        g.setPaint(Assets.colorNumero);
                         g.drawString(""+i*escala, origen.X-12,origen.Y-i*zoom.Y+8 );
-                    }
-                    
+                    } 
                 }
-                lista = new ArrayList<>();
-                lista.add(new Cargas(30,5,10));
-                lista.add(new Cargas(60,10,3));
-                lista.add(new Cargas(40,7,-5));
-                lista.add(new Cargas(10,-5,2));
+
+            }
+                
+                            
         }
         public void InsertarCargas(Graphics ap)
         {
                 Graphics2D g = (Graphics2D) ap;
-                
-                
                 int contador = 1;
-                for(int c = 0; c < lista.size(); c++){
+                for(int c = 0; c < listaCarga.size(); c++){
                 
                     for(int y=PuntosMinimos.Y+1;y<PuntosMaximos.Y;y++)
                     {   
                         for(int x=PuntosMinimos.X;x<=PuntosMaximos.X;x++)
                         {
-
-                            if(lista.get(c).getY() == y/escala && lista.get(c).getX() == x/escala)
+                            if(listaCarga.get(c).getY() == y/escala && listaCarga.get(c).getX() == x/escala)
                             {       
                                 int r = 20;                                
-                                g.setColor(colorCarga);                            
+                                g.setColor(Assets.colorCarga);                            
                                 g.fillOval(origen.X+x*zoom.X-8,origen.Y-y*zoom.Y-8 ,r,r);
-                                 g.setPaint(colorNumero);
+                                 g.setPaint(Assets.colorNumero);
                                 g.drawString("Q"+contador,origen.X+x*zoom.X-4,origen.Y-y*zoom.Y+4);
                                 contador++;
                             }
@@ -206,10 +207,27 @@ public class Grafica extends JPanel
                     }                
                 }   
         }
+        public void InsertarPuntos(Graphics ap)
+        {
+                Graphics2D g = (Graphics2D) ap;
+                int contador = 1;
+                for(int c = 0; c < listaPunto.size(); c++){
+                
+                    for(int y=PuntosMinimos.Y+1;y<PuntosMaximos.Y;y++)
+                    {   
+                        for(int x=PuntosMinimos.X;x<=PuntosMaximos.X;x++)
+                        {
+                            if(listaPunto.get(c).getY() == y/escala && listaPunto.get(c).getX() == x/escala)
+                            {       
+                                int r = 20;                                
+                                g.setColor(Assets.colorPunto);                            
+                                g.fillOval(origen.X+x*zoom.X-8,origen.Y-y*zoom.Y-8 ,r,r);
+                                 g.setPaint(Assets.colorNumero);
+                                g.drawString("A"+contador,origen.X+x*zoom.X-4,origen.Y-y*zoom.Y+4);
+                                contador++;
+                            }
+                        }
+                    }                
+                }   
+        }
     } 
-} 
-
-
-
-
-

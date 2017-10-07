@@ -10,10 +10,10 @@ package Desafio1.Entidades;
  * @author chepito
  */
 public class Cargas {
-    private int  carga;
+    private double  carga;
     private int  X;
     private int  Y;
-    private int distancia;
+    private double distancia;
     private double potencial;
 
     public Cargas() {
@@ -49,7 +49,7 @@ public class Cargas {
     }
     
 
-    public int getCarga() {
+    public double  getCarga() {
         return carga;
     }
 
@@ -73,11 +73,11 @@ public class Cargas {
         this.Y = Y;
     }
 
-    public int getDistancia() {
+    public double getDistancia() {
         return distancia;
     }
 
-    public void setDistancia(int distancia) {
+    public void setDistancia(double distancia) {
         this.distancia = distancia;
     }
             

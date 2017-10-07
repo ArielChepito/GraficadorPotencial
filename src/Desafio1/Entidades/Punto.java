@@ -20,6 +20,12 @@ public class Punto {
         this.potencial = potencial;
     }
 
+    public Punto(int X, int Y) {
+        this.X = X;
+        this.Y = Y;
+    }
+    
+
     public Punto() {
     }
     
