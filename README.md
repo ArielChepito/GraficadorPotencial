@@ -3,7 +3,7 @@ Calculadora y graficadora para calcular potencial
 
 
 
-Este es el repositorio para la solución del **desafio *1* ** de Fisica:) Utilizando la libreria de 2D de java y big decimal para las operaciones.
+Este es el repositorio para la solución del *desafio 1*  de Fisica:) Utilizando la libreria de 2D de java y big decimal para las operaciones.
 
 ----------
 
