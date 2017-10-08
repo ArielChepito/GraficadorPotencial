@@ -32,14 +32,8 @@ public class form extends javax.swing.JFrame {
     public form() {
         initComponents();
         
-        Vector dim = new Vector(Contenedor.getWidth(),Contenedor.getHeight());       
-        
-        planoCartesiano = new PlanoCartesiano(dim);    
-        
-        PlanoCartesiano.cuadricula = false;
-        PlanoCartesiano.numeros = true;
-        PlanoCartesiano.raya = false;
-        
+        Vector dim = new Vector(Contenedor.getWidth(),Contenedor.getHeight()); 
+        planoCartesiano = new PlanoCartesiano(dim);              
         JScrollPane scrollPanel = new JScrollPane(planoCartesiano);       
         Contenedor.setLayout(new BorderLayout());
         Contenedor.add(scrollPanel, BorderLayout.CENTER); 
@@ -57,8 +51,14 @@ public class form extends javax.swing.JFrame {
        planoCartesiano.repaint();
     }
     void insertarCarga(){        
-       String[] strDatos = txtCarga.getText().split(",");                 
-       double cargarel =  (cmbUnidad.getSelectedIndex() != 0) ?  Physics.internationalSystemUnits(cmbUnidad.getSelectedIndex(),Double.parseDouble(strDatos[0])) : Double.parseDouble(strDatos[0]);       
+       String[] strDatos = txtCarga.getText().split(",");      
+       BigDecimal cargarel = new BigDecimal("0.000");
+       if(cmbUnidad.getSelectedIndex() != 0){
+           cargarel = Physics.internationalSystemUnits(cmbUnidad.getSelectedIndex(),BigDecimal.valueOf(Double.parseDouble(strDatos[0])));       
+       }
+       else{
+            cargarel =  BigDecimal.valueOf(Double.parseDouble(strDatos[0]));
+       }  
        Cargas carga = new Cargas(
                cargarel,
                Integer.parseInt(strDatos[1]),
@@ -69,20 +69,30 @@ public class form extends javax.swing.JFrame {
        PlanoCartesiano.listaCarga = listaCarga;
        planoCartesiano.repaint();
     }
-    void calcularPotencial(){     
+    void calcularPotencial(){    
         
-       double resultado= 0.00;
-       for(Punto punto : listaPunto) 
-       {
-           for(Cargas carga : listaCarga) 
-           {
-               
-               resultado =+ Physics.calcularpotencial(punto, carga);
+       BigDecimal resultado= new BigDecimal ("0.000");
+       for(Punto punto : listaPunto){
+           for(Cargas carga : listaCarga){              
+                resultado= resultado.add( Physics.calcularpotencial(punto, carga));
+                System.out.println("Form resultado: "+resultado);
+                punto.setPotencial(resultado);
            }
-           this.cmbResultado.addItem(String.format("%3.3e",resultado));
-       }
-       
+           resultado= new BigDecimal ("0.000");
+           this.cmbResultado.addItem(punto+"");
+       }       
        planoCartesiano.repaint();
+    }
+    void limpiar()
+    {
+        listaCarga = new ArrayList<>();    
+        listaPunto = new ArrayList<>();
+        PlanoCartesiano.listaCarga = listaCarga;
+        PlanoCartesiano.listaPunto = listaPunto;
+        this.cmbResultado.removeAllItems();
+        this.txtCarga.setText("");
+        this.txtPunto.setText("");
+        this.planoCartesiano.repaint();
     }
     
     @SuppressWarnings("unchecked")
@@ -100,8 +110,11 @@ public class form extends javax.swing.JFrame {
         btnPunto = new javax.swing.JButton();
         cmbUnidad = new javax.swing.JComboBox<>();
         cmbResultado = new javax.swing.JComboBox<>();
+        btnSettings = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("CALCULAR POTENCIAL");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Contenedor.setBackground(new java.awt.Color(153, 255, 255));
@@ -173,6 +186,22 @@ public class form extends javax.swing.JFrame {
 
         getContentPane().add(cmbResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 620, 220, -1));
 
+        btnSettings.setText("SETTINGS");
+        btnSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSettingsActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnSettings, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 620, -1, -1));
+
+        btnReset.setText("RESET");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnReset, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 570, 100, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
@@ -199,6 +228,17 @@ public class form extends javax.swing.JFrame {
              insertarPunto();
          }
     }//GEN-LAST:event_txtPuntoKeyPressed
+
+    private void btnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingsActionPerformed
+        Conf conf = new Conf(this, true);       
+        conf.setLocation(100,100);
+        conf.setVisible(true);
+        planoCartesiano.repaint();
+    }//GEN-LAST:event_btnSettingsActionPerformed
+   
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+       limpiar();
+    }//GEN-LAST:event_btnResetActionPerformed
     
     
     public static void main(String args[]) {
@@ -238,6 +278,8 @@ public class form extends javax.swing.JFrame {
     private javax.swing.JButton btnCalcular;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton btnPunto;
+    private javax.swing.JButton btnReset;
+    private javax.swing.JButton btnSettings;
     private javax.swing.JComboBox<String> cmbResultado;
     private javax.swing.JComboBox<String> cmbUnidad;
     private javax.swing.JLabel jLabel1;

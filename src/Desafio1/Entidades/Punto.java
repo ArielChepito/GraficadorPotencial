@@ -5,6 +5,8 @@
  */
 package Desafio1.Entidades;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author chepito
@@ -13,16 +15,33 @@ public class Punto {
 
     public int X;
     public int Y;
-    public double potencial;
-    public Punto(int X, int Y, double potencial) {
+    public BigDecimal potencial = new BigDecimal("0.000");
+     private String name;
+    private static int contador = 1;
+    private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
+    public Punto(int X, int Y, BigDecimal potencial) {
         this.X = X;
         this.Y = Y;
         this.potencial = potencial;
+        name = ""+ String.valueOf(alphabet[contador-1]).toUpperCase();
+         contador++;
     }
 
     public Punto(int X, int Y) {
         this.X = X;
         this.Y = Y;
+       name = ""+ String.valueOf(alphabet[contador-1]).toUpperCase();
+         contador++;
     }
     
 
@@ -45,13 +64,22 @@ public class Punto {
         this.Y = Y;
     }
 
-    public double getPotencial() {
+    public BigDecimal getPotencial() {
         return potencial;
     }
 
-    public void setPotencial(double potencial) {
+    public void setPotencial(BigDecimal potencial) {
         this.potencial = potencial;
     }
+
+    @Override
+    public String toString() {
+        return "Punto " +name+ ": "+ potencial;
+    }
+    
+    
+    
+    
 
     
     

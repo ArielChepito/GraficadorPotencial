@@ -35,8 +35,7 @@ import java.util.List;
         
         public PlanoCartesiano(Vector dim) 
         {
-            dimension.set(dim);   
-            imageIcon = new ImageIcon(getClass().getResource(Assets.rutaImagen));  
+            dimension.set(dim);                
             espaciado.set(origen);
             escala =1;
             zoom.set(30);
@@ -108,8 +107,8 @@ import java.util.List;
         
         void Graficar(Graphics ap)
         {
+            imageIcon = new ImageIcon(getClass().getResource(Assets.rutaImagen)); 
             ap.drawImage(imageIcon.getImage(), 0, 0, getWidth(), getHeight(), null);      
-            
             Graphics2D g = (Graphics2D) ap;
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setFont(Assets.fuenteNumeros);            
@@ -187,7 +186,7 @@ import java.util.List;
         public void InsertarCargas(Graphics ap)
         {
                 Graphics2D g = (Graphics2D) ap;
-                int contador = 1;
+                
                 for(int c = 0; c < listaCarga.size(); c++){
                 
                     for(int y=PuntosMinimos.Y+1;y<PuntosMaximos.Y;y++)
@@ -200,8 +199,7 @@ import java.util.List;
                                 g.setColor(Assets.colorCarga);                            
                                 g.fillOval(origen.X+x*zoom.X-8,origen.Y-y*zoom.Y-8 ,r,r);
                                  g.setPaint(Assets.colorNumero);
-                                g.drawString("Q"+contador,origen.X+x*zoom.X-4,origen.Y-y*zoom.Y+4);
-                                contador++;
+                                g.drawString(listaCarga.get(c).getName(),origen.X+x*zoom.X-4,origen.Y-y*zoom.Y+4);                                
                             }
                         }
                     }                
@@ -209,8 +207,7 @@ import java.util.List;
         }
         public void InsertarPuntos(Graphics ap)
         {
-                Graphics2D g = (Graphics2D) ap;
-                int contador = 1;
+                Graphics2D g = (Graphics2D) ap;                
                 for(int c = 0; c < listaPunto.size(); c++){
                 
                     for(int y=PuntosMinimos.Y+1;y<PuntosMaximos.Y;y++)
@@ -223,8 +220,8 @@ import java.util.List;
                                 g.setColor(Assets.colorPunto);                            
                                 g.fillOval(origen.X+x*zoom.X-8,origen.Y-y*zoom.Y-8 ,r,r);
                                  g.setPaint(Assets.colorNumero);
-                                g.drawString("A"+contador,origen.X+x*zoom.X-4,origen.Y-y*zoom.Y+4);
-                                contador++;
+                                g.drawString(listaPunto.get(c).getName(),origen.X+x*zoom.X-4,origen.Y-y*zoom.Y+4);
+                                
                             }
                         }
                     }                

@@ -5,39 +5,61 @@
  */
 package Desafio1.Entidades;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author chepito
  */
 public class Cargas {
-    private double  carga;
+    private BigDecimal  carga;
     private int  X;
     private int  Y;
     private double distancia;
     private double potencial;
+    private String name;
+    private static int contador = 1;
 
     public Cargas() {
+        name = "Q"+contador;
+         contador++;
     }
 
-    public Cargas(double carga, int X, int Y, int distancia) {
+    public Cargas(BigDecimal carga, int X, int Y, int distancia) {
         this.carga = carga;
         this.X = X;
         this.Y = Y;
         this.distancia = distancia;
+        name = "Q"+contador;
+        contador++;
     }
 
-    public Cargas(double carga, int X, int Y) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
+
+    public Cargas(BigDecimal carga, int X, int Y) {
         this.carga = carga;
         this.X = X;
         this.Y = Y;
+        name = "Q"+contador;
+        contador++;
     }
 
-    public Cargas(double carga, int X, int Y, int distancia, double potencial) {
+    public Cargas(BigDecimal carga, int X, int Y, int distancia, double potencial) {
         this.carga = carga;
         this.X = X;
         this.Y = Y;
         this.distancia = distancia;
         this.potencial = potencial;
+        name = "Q"+contador;
+        contador++;
     }
 
     public double getPotencial() {
@@ -49,11 +71,11 @@ public class Cargas {
     }
     
 
-    public double  getCarga() {
+    public BigDecimal  getCarga() {
         return carga;
     }
 
-    public void setCarga(int carga) {
+    public void setCarga(BigDecimal carga) {
         this.carga = carga;
     }
 
