@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 
 /**
  *
@@ -30,7 +31,7 @@ public class form extends javax.swing.JFrame {
     List<Punto> listaPunto = new ArrayList<>();
     
     public form() {
-        initComponents();
+        initComponents();      
         
         Vector dim = new Vector(Contenedor.getWidth(),Contenedor.getHeight()); 
         planoCartesiano = new PlanoCartesiano(dim);              
@@ -74,8 +75,7 @@ public class form extends javax.swing.JFrame {
        BigDecimal resultado= new BigDecimal ("0.000");
        for(Punto punto : listaPunto){
            for(Cargas carga : listaCarga){              
-                resultado= resultado.add( Physics.calcularpotencial(punto, carga));
-                System.out.println("Form resultado: "+resultado);
+                resultado= resultado.add( Physics.calcularpotencial(punto, carga));                
                 punto.setPotencial(resultado);
            }
            resultado= new BigDecimal ("0.000");
@@ -247,27 +247,17 @@ public class form extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(form.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(form.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(form.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(form.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        try {            
+            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"  );                  
+                
+        } catch (Exception ex) {
+            
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            public void run() {                
                 new form().setVisible(true);
             }
         });
