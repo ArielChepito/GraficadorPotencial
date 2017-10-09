@@ -18,7 +18,7 @@ public class Cargas {
     private double distancia;
     private double potencial;
     private String name;
-    private static int contador = 1;
+    public  static int contador = 1;
 
     public Cargas() {
         name = "Q"+contador;

@@ -17,7 +17,7 @@ public class Punto {
     public int Y;
     public BigDecimal potencial = new BigDecimal("0.000");
      private String name;
-    private static int contador = 1;
+    public  static int contador = 1;
     private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
     public String getName() {
@@ -40,8 +40,8 @@ public class Punto {
     public Punto(int X, int Y) {
         this.X = X;
         this.Y = Y;
-       name = ""+ String.valueOf(alphabet[contador-1]).toUpperCase();
-         contador++;
+        name = ""+ String.valueOf(alphabet[contador-1]).toUpperCase();
+        contador++;
     }
     
 

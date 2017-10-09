@@ -40,35 +40,48 @@ public class form extends javax.swing.JFrame {
         Contenedor.add(scrollPanel, BorderLayout.CENTER); 
         Contenedor.setPreferredSize( new Dimension(dim.X,dim.Y));
     }    
-    void insertarPunto(){        
-       String[] strDatos = txtPunto.getText().split(",");
-       Punto punto = new Punto(
-               Integer.parseInt(strDatos[0]),
-               Integer.parseInt(strDatos[1])    
-       );
-       listaPunto.add(punto);
-       txtPunto.setText("");
-       PlanoCartesiano.listaPunto = listaPunto;
-       planoCartesiano.repaint();
+    void insertarPunto(){  
+        try {
+            String[] strDatos = txtPunto.getText().split(",");
+            Punto punto = new Punto(
+                    Integer.parseInt(strDatos[0]),
+                    Integer.parseInt(strDatos[1])    
+            );
+            listaPunto.add(punto);
+            txtPunto.setText("");
+            PlanoCartesiano.listaPunto = listaPunto;
+            planoCartesiano.repaint();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("error: "+e.getMessage());
+            txtPunto.setText("");
+        }
+                
+       
     }
     void insertarCarga(){        
-       String[] strDatos = txtCarga.getText().split(",");      
-       BigDecimal cargarel = new BigDecimal("0.000");
-       if(cmbUnidad.getSelectedIndex() != 0){
-           cargarel = Physics.internationalSystemUnits(cmbUnidad.getSelectedIndex(),BigDecimal.valueOf(Double.parseDouble(strDatos[0])));       
-       }
-       else{
-            cargarel =  BigDecimal.valueOf(Double.parseDouble(strDatos[0]));
-       }  
-       Cargas carga = new Cargas(
-               cargarel,
-               Integer.parseInt(strDatos[1]),
-               Integer.parseInt(strDatos[2])       
-       );              
-       listaCarga.add(carga);
-       txtCarga.setText("");
-       PlanoCartesiano.listaCarga = listaCarga;
-       planoCartesiano.repaint();
+        try {
+            String[] strDatos = txtCarga.getText().split(",");      
+            BigDecimal cargarel = new BigDecimal("0.000");
+            if(cmbUnidad.getSelectedIndex() != 0){
+                cargarel = Physics.internationalSystemUnits(cmbUnidad.getSelectedIndex(),BigDecimal.valueOf(Double.parseDouble(strDatos[0])));       
+            }
+            else{
+                 cargarel =  BigDecimal.valueOf(Double.parseDouble(strDatos[0]));
+            }  
+            Cargas carga = new Cargas(
+                    cargarel,
+                    Integer.parseInt(strDatos[1]),
+                    Integer.parseInt(strDatos[2])       
+            );              
+            listaCarga.add(carga);
+            txtCarga.setText("");
+            PlanoCartesiano.listaCarga = listaCarga;
+            planoCartesiano.repaint();
+        } catch (Exception e) {
+            txtCarga.setText("");
+        }
     }
     void calcularPotencial(){    
         
@@ -86,13 +99,15 @@ public class form extends javax.swing.JFrame {
     void limpiar()
     {
         listaCarga = new ArrayList<>();    
-        listaPunto = new ArrayList<>();
+        listaPunto = new ArrayList<>();     
         PlanoCartesiano.listaCarga = listaCarga;
         PlanoCartesiano.listaPunto = listaPunto;
         this.cmbResultado.removeAllItems();
         this.txtCarga.setText("");
         this.txtPunto.setText("");
         this.planoCartesiano.repaint();
+        Cargas.contador = 1;
+        Punto.contador = 1;
     }
     
     @SuppressWarnings("unchecked")
