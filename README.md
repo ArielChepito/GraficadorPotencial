@@ -41,10 +41,15 @@ y = 1
 ![enter image description here](https://k61.kn3.net/5/E/0/A/9/E/DCF.jpg)
 
 
+
 #### <i class="icon-pencil"></i> Captura del programa
 
 ![enter image description here](https://k60.kn3.net/8/9/A/1/5/D/7A3.png)
 
+
+#### <i class="icon-file"></i> Técnologia 
+
+* Java
 
 ----------
 
